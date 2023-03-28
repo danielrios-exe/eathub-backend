@@ -1,0 +1,31 @@
+{
+  "name": "eathub-backend",
+  "version": "1.0.0",
+  "description": "backend app for eathub social network",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "start": "node index.js",
+    "lint": "eslint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danielrios-exe/eathub-backend.git"
+  },
+  "author": "danielrios.exe",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/danielrios-exe/eathub-backend/issues"
+  },
+  "homepage": "https://github.com/danielrios-exe/eathub-backend#readme",
+  "devDependencies": {
+    "@types/express": "^4.17.17",
+    "@types/node": "^18.15.10",
+    "eslint": "^8.36.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "nodemon": "^2.0.22",
+    "prettier": "^2.8.7",
+    "typescript": "^5.0.2"
+  }
+}
