@@ -6,7 +6,7 @@ const service = new QuantityService();
 
 router.get('/', (req, res) => {
   const menuDetailQuantities = service.get();
-  res.json(menuDetailQuantities);
+  res.send('quantitites service executed');
 });
 
 export default router;
