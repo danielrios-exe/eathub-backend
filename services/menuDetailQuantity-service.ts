@@ -1,5 +1,10 @@
+import Database from '../db/Database';
+
 class ProductsService {
   constructor() {}
+
+  // Connection to database
+  databaseInstance = Database.getInstance();
 
   /**
    * TODO: This method was created in order to
@@ -7,7 +12,7 @@ class ProductsService {
    * Add service-related code in a different branch
    */
   get() {
-    console.log('Hello world');
+    // TODO: create view and call for quantities catalogue
   }
 }
 
