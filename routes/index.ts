@@ -1,17 +1,13 @@
-import express from 'express';
-import quantityRouter from './menuDetailQuantity-router';
-import authenticationRouter from './authentication-router';
+import { Router } from 'express';
+import quantityRouter from './menu-router';
 
-function buildRouter(app: express.Express) {
-  const router = express.Router();
+function buildRouter(app: Router) {
+  const router: Router = Router();
 
-  // Authentication
-  router.use('/token', authenticationRouter);
+  // Menu router
+  router.use('/menu', quantityRouter);
 
-  // Private routes
-  router.use('/quantities', quantityRouter);
-
-  // Root route
+  // Root router
   app.use('/api', router);
 }
 
