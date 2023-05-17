@@ -1,13 +1,13 @@
-import express from 'express';
-import quantityRouter from './menuDetailQuantity-router';
+import { Router } from 'express';
+import quantityRouter from './menu-router';
 
-function buildRouter(app: express.Express) {
-  const router = express.Router();
+function buildRouter(app: Router) {
+  const router: Router = Router();
 
-  // Quantiy catalogue route
-  router.use('/quantities', quantityRouter);
+  // Menu router
+  router.use('/menu', quantityRouter);
 
-  // Root route
+  // Root router
   app.use('/api', router);
 }
 
