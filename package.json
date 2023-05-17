@@ -5,7 +5,7 @@
   "main": "index.ts",
   "scripts": {
     "dev": "nodemon index.ts",
-    "start": "node index.ts",
+    "start": "npx ts-node index.ts",
     "lint": "eslint"
   },
   "repository": {
@@ -19,8 +19,10 @@
   },
   "homepage": "https://github.com/danielrios-exe/eathub-backend#readme",
   "devDependencies": {
+    "@types/cors": "^2.8.13",
     "@types/express": "^4.17.17",
     "@types/node": "^18.15.10",
+    "@types/pg": "^8.6.6",
     "@types/tedious": "^4.0.9",
     "eslint": "^8.36.0",
     "eslint-config-prettier": "^8.8.0",
@@ -31,8 +33,10 @@
     "typescript": "^5.0.2"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "pg": "^8.10.0",
     "tedious": "^16.0.0"
   }
 }
