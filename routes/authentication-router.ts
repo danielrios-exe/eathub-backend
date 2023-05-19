@@ -1,38 +1,52 @@
 import express from 'express';
 import AuthenticationService from '../services/authentication-service';
 import UserService from '../services/user-service';
+import Errors from '../errors/errors';
 
 const router = express.Router();
 const authService = new AuthenticationService();
 const userService = new UserService();
 
-router.get('/', (req, res) => {
-  // Get raw authorization header
-  const authHeader: string = req.headers.authorization || '';
-  const type: string = authHeader.split(' ')[0];
-  const encodedString: string = authHeader.split(' ')[1];
+router.post('/token', async (req, res) => {
+  try {
+    const authHeader: string = req.headers.authorization || '';
+    const decodedString: string = authService.getDecodedString(authHeader);
+    const { username, password } = authService.getCredentials(decodedString);
+    const isUserValid = await userService.isUserValid(username, password);
 
-  // Handle correct type and content
-  if (type !== 'Basic' || !encodedString) {
-    // Bad request
-    return res.status(400);
+    if (isUserValid) {
+      const token = authService.getToken({ username, password });
+      res.send(token);
+    } else {
+      res.status(401).send({ success: false, message: 'Invalid credentials.' });
+    }
+  } catch (error) {
+    if (error === Errors.NO_USER_FOUND) {
+      return res.status(401).send({ success: false, message: error });
+    }
+
+    res.status(400).send({ success: false, message: error });
   }
+});
 
-  // Decode base64 --> string
-  const decodedString: string = Buffer.from(encodedString, 'base64').toString();
+router.post('/register', async (req, res) => {
+  try {
+    const { username } = req.body;
+    const isUserInDB = await userService.isUserInDB(username);
 
-  // Get username and password
-  const username: string = decodedString.split(':')[0];
-  const password: string = decodedString.split(':')[1];
+    if (isUserInDB) {
+      res.status(409).send(Errors.USER_ALRADY_IN_DB);
+    } else {
+      await userService.createUser(req.body);
+      return res.status(201).send({ success: true, message: 'User created.' });
+    }
+  } catch (error) {
+    if (error === Errors.NO_USER_FOUND) {
+      return res.status(401).send({ success: false, message: error });
+    }
 
-  // Check that username and password are present
-  if (!username || !password) {
-    // Bad request
-    return res.status(400);
+    res.status(400).send({ success: false, message: error });
   }
-
-  userService.isUserValid(username, password);
-  res.send('Done');
 });
 
 export default router;
