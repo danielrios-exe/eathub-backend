@@ -7,7 +7,7 @@ class MealTypeService {
    * This service is used when creating a menu.
    */
   async get() {
-    const request = await pool.query('SELECT * FROM meal_type');
+    const request = await pool.query('SELECT * FROM meal_type_catalogue');
     const rowCount = request.rowCount;
 
     /**
@@ -15,7 +15,7 @@ class MealTypeService {
      * If there are no meal types, then the menu cannot be created.
      */
     if (rowCount === 0) {
-      throw new Error(Errors.NO_MEAL_TYPES_FOUND);
+      throw Errors.NO_MEAL_TYPES_FOUND;
     }
 
     return request.rows;

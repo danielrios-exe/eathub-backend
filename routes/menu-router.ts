@@ -12,7 +12,7 @@ router.get('/mealTypes', async (_req: Request, res: Response) => {
     res.send({ success: true, data: mealTypes });
   } catch (error) {
     if (error === Errors.NO_MEAL_TYPES_FOUND) {
-      res.status(404).send({ success: false, error: error });
+      return res.status(404).send({ success: false, message: error });
     }
     res.status(500).send({ success: false, error: Errors.INTERNAL_ERROR });
   }
