@@ -8,6 +8,7 @@ interface VariablesInterface {
   };
   auth: {
     cipherSecret: string;
+    authSecret: string;
   };
 }
 
@@ -23,7 +24,8 @@ const Variables: VariablesInterface = {
   },
   auth: {
     cipherSecret: process.env.CIPHER_SECRET || '',
-  }
+    authSecret: process.env.AUTH_SECRET || '',
+  },
 };
 
 export default Variables;
