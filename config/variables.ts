@@ -1,14 +1,30 @@
 import * as dotenv from 'dotenv';
 
+interface VariablesInterface {
+  environment: string;
+  port: string;
+  db: {
+    nonPooling: string;
+  };
+  auth: {
+    cipherSecret: string;
+    authSecret: string;
+  };
+}
+
 // Loads .env file content into process.env
 dotenv.config();
 
 // Global project's config object
-const Variables = {
+const Variables: VariablesInterface = {
   environment: process.env.ENVIRONMENT || 'development',
-  port: process.env.PORT,
+  port: process.env.PORT || '3000',
   db: {
-    nonPooling: process.env.POSTGRES_URL_NON_POOLING,
+    nonPooling: process.env.POSTGRES_URL_NON_POOLING || '',
+  },
+  auth: {
+    cipherSecret: process.env.CIPHER_SECRET || '',
+    authSecret: process.env.AUTH_SECRET || '',
   },
 };
 
