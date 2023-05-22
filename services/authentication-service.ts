@@ -2,12 +2,50 @@ import CryptoJS from 'crypto-js';
 import pool from '../db/Database';
 import Variables from '../config/variables';
 import Errors from '../errors/errors';
-import { sign } from 'jsonwebtoken';
+import { sign, verify } from 'jsonwebtoken';
 
 class AuthenticationService {
-  getToken(payload: { username: string; password: string }) {
+  /**
+   * Checks if the request token is valid
+   */
+  static async isAuthorized(authHeader: string): Promise<boolean> {
+    const token: string = this.getBearerToken(authHeader);
+    const verifiedToken = verify(token, Variables.auth.authSecret);
+
+    if (!verifiedToken) {
+      throw Errors.INVALID_TOKEN;
+    }
+
+    return true;
+  }
+
+  /**
+   * Creates a token
+   * @param payload
+   * @returns
+   */
+  createToken(payload: { username: string; password: string }) {
     //create token
     const token = sign(payload, Variables.auth.authSecret);
+    return token;
+  }
+
+  /**
+   * Takes an authorization header and
+   * returns the token value
+   * @param authHeader raw authorization header
+   * @returns token
+   */
+  static getBearerToken(authHeader: string): string {
+    const type: string = authHeader.split(' ')[0];
+    const token: string = authHeader.split(' ')[1];
+
+    // Handle correct type and content
+    if (type !== 'Bearer' || !token) {
+      // Bad request
+      throw Errors.INVALID_AUTH_HEADER;
+    }
+
     return token;
   }
 
