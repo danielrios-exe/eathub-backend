@@ -16,9 +16,11 @@ router.post('/token', async (req, res) => {
 
     if (isUserValid) {
       const token = authService.createToken({ username, password });
-      res.send(token);
+      return res.send(token);
     } else {
-      res.status(401).send({ success: false, message: 'Invalid credentials.' });
+      return res
+        .status(401)
+        .send({ success: false, message: 'Invalid credentials.' });
     }
   } catch (error) {
     if (error === Errors.NO_USER_FOUND) {

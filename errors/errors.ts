@@ -11,6 +11,8 @@ enum Errors {
   FAILED_TO_ADD_COMMENT = 'Failed to add comment',
   FAILED_TO_LIKE_POST = 'Failed to like post',
   FAILED_TO_LIKE_COMMENT = 'Failed to like comment',
+  FAILED_TO_CREATE_REVIEW = 'Failed to create review',
+  NO_REVIEWS_FOUND = 'No reviews found',
 }
 
 export default Errors;
