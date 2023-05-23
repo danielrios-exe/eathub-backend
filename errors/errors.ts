@@ -13,6 +13,8 @@ enum Errors {
   FAILED_TO_LIKE_COMMENT = 'Failed to like comment',
   FAILED_TO_CREATE_REVIEW = 'Failed to create review',
   NO_REVIEWS_FOUND = 'No reviews found',
+  FAILED_TO_CREATE_MENU = 'Failed to create menu',
+  NO_MENU_DETAILS_FOUND = 'No menu details found',
 }
 
 export default Errors;

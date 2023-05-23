@@ -1,8 +1,8 @@
 import pool from '../db/Database';
 import Errors from '../errors/errors';
 
-interface Post {
-  id: number;
+export interface Post {
+  id?: number;
   text: string;
   likes_count?: number;
   created_at?: Date;
