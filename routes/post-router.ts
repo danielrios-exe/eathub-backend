@@ -27,10 +27,10 @@ router.post('/', async (req: Request, res: Response) => {
       return res.status(401).send({ success: false, message: error });
     }
     if (error === Errors.INVALID_TOKEN) {
-      res.status(401).send({ success: false, message: error });
+      return res.status(401).send({ success: false, message: error });
     }
     if (error === Errors.FAILED_TO_CREATE_POST) {
-      res.status(500).send({ success: false, message: error });
+      return res.status(500).send({ success: false, message: error });
     }
 
     res.status(500).send({ success: false, error: error });
@@ -56,10 +56,10 @@ router.get('/', async (req: Request, res: Response) => {
       return res.status(404).send({ success: false, message: error });
     }
     if (error === Errors.INVALID_TOKEN) {
-      res.status(401).send({ success: false, message: error });
+      return res.status(401).send({ success: false, message: error });
     }
     if (error === Errors.NO_POSTS_FOUND) {
-      res.status(404).send({ success: false, message: error });
+      return res.status(404).send({ success: false, message: error });
     }
 
     res.status(500).send({ success: false, error: error });
@@ -85,10 +85,10 @@ router.post('/:id/comment', async (req: Request, res: Response) => {
       return res.status(401).send({ success: false, message: error });
     }
     if (error === Errors.INVALID_TOKEN) {
-      res.status(401).send({ success: false, message: error });
+      return res.status(401).send({ success: false, message: error });
     }
     if (error === Errors.FAILED_TO_ADD_COMMENT) {
-      res.status(500).send({ success: false, message: error });
+      return res.status(500).send({ success: false, message: error });
     }
 
     res.status(500).send({ success: false, error: error });
@@ -113,10 +113,10 @@ router.put('/:id/like', async (req: Request, res: Response) => {
       return res.status(401).send({ success: false, message: error });
     }
     if (error === Errors.INVALID_TOKEN) {
-      res.status(401).send({ success: false, message: error });
+      return res.status(401).send({ success: false, message: error });
     }
     if (error === Errors.FAILED_TO_LIKE_POST) {
-      res.status(500).send({ success: false, message: error });
+      return res.status(500).send({ success: false, message: error });
     }
 
     res.status(500).send({ success: false, error: error });
@@ -148,10 +148,10 @@ router.put(
         return res.status(401).send({ success: false, message: error });
       }
       if (error === Errors.INVALID_TOKEN) {
-        res.status(401).send({ success: false, message: error });
+        return res.status(401).send({ success: false, message: error });
       }
       if (error === Errors.FAILED_TO_LIKE_POST) {
-        res.status(500).send({ success: false, message: error });
+        return res.status(500).send({ success: false, message: error });
       }
 
       res.status(500).send({ success: false, error: error });
