@@ -4,19 +4,31 @@ import Variables from '../config/variables';
 import Errors from '../errors/errors';
 import { sign, verify } from 'jsonwebtoken';
 
+interface Token {
+  username: string;
+  password: string;
+  iat: number;
+}
+
+interface AuthResponse {
+  username: string;
+  isAuthorized: boolean;
+}
+
 class AuthenticationService {
   /**
    * Checks if the request token is valid
    */
-  static async isAuthorized(authHeader: string): Promise<boolean> {
+  static async isAuthorized(authHeader: string): Promise<AuthResponse> {
     const token: string = this.getBearerToken(authHeader);
     const verifiedToken = verify(token, Variables.auth.authSecret);
+    const username = (verifiedToken as Token).username;
 
     if (!verifiedToken) {
       throw Errors.INVALID_TOKEN;
     }
 
-    return true;
+    return { username, isAuthorized: true };
   }
 
   /**
