@@ -89,7 +89,6 @@ class MenuService {
    * @returns
    */
   async get(restaurant_id: string) {
-    console.log('restaurant_id', restaurant_id);
     const menuRequest = await pool.query(
       `select m.*, u.username  from menu m ` +
         `join "user" u on m.restaurant_id = u.id ` +
@@ -102,7 +101,6 @@ class MenuService {
     }
 
     const menu = { ...menuRequest.rows[0] };
-    console.log('menu', menu);
 
     // Get menu details
     const menuDetailsRequest = await pool.query(

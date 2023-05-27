@@ -37,13 +37,10 @@ router.post('/', async (req: Request, res: Response) => {
 
 router.get('/', async (req: Request, res: Response) => {
   try {
-    console.log('get menu');
     const requestHeader: string = req.headers['authorization'] || '';
     const { isAuthorized } = await AuthenticationService.isAuthorized(
       requestHeader
     );
-
-    console.log(isAuthorized);
 
     if (!isAuthorized) {
       return res.status(401).send({ success: false, message: 'Unauthorized.' });

@@ -21,7 +21,7 @@ router.get('/', async (req: Request, res: Response) => {
     res.send({ success: true, restaurants });
   } catch (error) {
     if (error === Errors.INVALID_AUTH_HEADER) {
-      return res.status(404).send({ success: false, message: error });
+      return res.status(401).send({ success: false, message: error });
     }
     if (error === Errors.INVALID_TOKEN) {
       return res.status(401).send({ success: false, message: error });

@@ -62,7 +62,6 @@ class UserService {
   }
 
   async createUser(userObj: User) {
-    console.log('userObj', userObj);
     const authService = new AuthenticationService();
     const request = await pool.query(
       `INSERT INTO "user" ` +
@@ -72,7 +71,6 @@ class UserService {
         `'${userObj.name}', '${userObj.lastName}', '${userObj.email}', ` +
         `true, ${userObj.roleId}) returning id`
     );
-    console.log('request', request);
     const rowCount = request.rowCount;
 
     if (rowCount === 0) {
