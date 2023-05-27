@@ -7,7 +7,7 @@ export interface Post {
   likes_count?: number;
   created_at?: Date;
   userId: number;
-  image: Image[];
+  images: Image[];
 }
 
 interface Image {
@@ -48,20 +48,19 @@ class PostService {
     let imageRequestString = `insert into image (url, post_id) values`;
 
     // Append url values to the query string
-    post.image.forEach((image: Image, index) => {
-      console.log(`image ${index}`, image.url);
-      if (index === post.image?.length - 1) {
+    post.images.forEach((image: Image, index) => {
+      if (index === post.images?.length - 1) {
         imageRequestString += ` ('${image.url}', ${postId})`;
       } else {
         imageRequestString += ` ('${image.url}', ${postId}),`;
       }
     });
 
-    if (post.image.length > 0) {
+    if (post.images.length > 0) {
       const imageRequest = await pool.query(imageRequestString);
       rowCount = imageRequest.rowCount;
 
-      if (rowCount === 0 && post.image.length > 0) {
+      if (rowCount === 0 && post.images.length > 0) {
         throw Errors.FAILED_TO_CREATE_POST;
       }
     }
@@ -76,7 +75,8 @@ class PostService {
    */
   async get() {
     const postsRequest = await pool.query(
-      'select * from post order by created_at desc limit (10)'
+      'select p.*, u.username, u."name", u.last_name from post p ' +
+        'join "user" u on p.user_id = u.id order by p.created_at desc limit(10)'
     );
     const rowCount = postsRequest.rowCount;
 
@@ -84,7 +84,7 @@ class PostService {
       throw Errors.NO_POSTS_FOUND;
     }
 
-    const posts: Post[] = [...postsRequest.rows];
+    const posts: Post[] = [];
     for (let it = 0; it < postsRequest.rows.length; it++) {
       const post = postsRequest.rows[it];
 
@@ -94,11 +94,13 @@ class PostService {
       );
 
       // Update object
-      post.image = imagesRequest.rows;
+      post.images = imagesRequest.rows;
 
       // Fetch comments
       const commentsRequest = await pool.query(
-        `select * from comment where post_id = ${post.id}`
+        `select c.*, u.username, u."name", u.last_name from comment c ` +
+          `join "user" u on c.user_id = u.id ` +
+          `where post_id = ${post.id}`
       );
 
       // Update object

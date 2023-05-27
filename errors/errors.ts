@@ -15,6 +15,7 @@ enum Errors {
   NO_REVIEWS_FOUND = 'No reviews found',
   FAILED_TO_CREATE_MENU = 'Failed to create menu',
   NO_MENU_DETAILS_FOUND = 'No menu details found',
+  NO_RESTAURANTS_FOUND = 'No restaurants found',
 }
 
 export default Errors;
