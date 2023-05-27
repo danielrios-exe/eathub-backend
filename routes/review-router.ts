@@ -47,8 +47,8 @@ router.get('/', async (req: Request, res: Response) => {
 
     const user_id = req.query.user_id as string;
     const type = req.query.type as string;
-    const posts = await reviewService.get(user_id, type);
-    res.send({ success: true, data: posts });
+    const reviews = await reviewService.get(user_id, type);
+    res.send({ success: true, reviews });
   } catch (error) {
     if (error === Errors.INVALID_AUTH_HEADER) {
       return res.status(404).send({ success: false, message: error });

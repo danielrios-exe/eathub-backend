@@ -42,15 +42,13 @@ class ReviewService {
     if (type === 'reviewer') {
       queryString = `select * from review where reviewer_id = ${user_id}`;
     } else {
-      queryString = `select * from review where reviewee_id = ${user_id}`;
+      queryString =
+        `select r.*, u.username from review r ` +
+        `join "user" u on r.reviewer_id = u.id ` +
+        `where r.reviewee_id = ${user_id}`;
     }
 
     const reviewssRequest = await pool.query(queryString);
-    const rowCount = reviewssRequest.rowCount;
-
-    if (rowCount === 0) {
-      throw Errors.NO_REVIEWS_FOUND;
-    }
 
     return reviewssRequest.rows;
   }
