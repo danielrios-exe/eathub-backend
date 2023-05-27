@@ -18,14 +18,14 @@ class RestaurantService {
    */
   async get() {
     const request = await pool.query(
-      'select u.id, u.username, count(md.*) "details_count", count(r2.*) "review_count" ' +
+      'select u.id, u.username, (select count(*) from menu_detail where menu_id = m.id) "details_count", (select count(*) from review r3 where reviewee_id = u.id) "review_count" from "user" u ' +
         'from "user" u ' +
         'left join review r2 on u.id = r2.reviewee_id ' +
         'join menu m on u.id = m.restaurant_id ' +
         'join menu_detail md on m.id = md.menu_id ' +
         'join "role" r on u.role_id = r.id ' +
         'where r."name" = \'Restaurant\' ' +
-        'group by u.id'
+        'group by u.id, m.id'
     );
     const rowCount = request.rowCount;
 
