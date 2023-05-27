@@ -9,10 +9,9 @@ const postService = new PostService();
 const commentService = new CommentService();
 
 router.post('/', async (req: Request, res: Response) => {
-  console.log('POST /api/post');
   try {
     const requestHeader: string = req.headers['authorization'] || '';
-    const isAuthorized = await AuthenticationService.isAuthorized(
+    const { isAuthorized } = await AuthenticationService.isAuthorized(
       requestHeader
     );
 
@@ -38,10 +37,9 @@ router.post('/', async (req: Request, res: Response) => {
 });
 
 router.get('/', async (req: Request, res: Response) => {
-  console.log('GET /api/post');
   try {
     const requestHeader: string = req.headers['authorization'] || '';
-    const isAuthorized = await AuthenticationService.isAuthorized(
+    const { isAuthorized } = await AuthenticationService.isAuthorized(
       requestHeader
     );
 
@@ -50,10 +48,10 @@ router.get('/', async (req: Request, res: Response) => {
     }
 
     const posts = await postService.get();
-    res.send({ success: true, data: posts });
+    res.send({ success: true, posts: posts });
   } catch (error) {
     if (error === Errors.INVALID_AUTH_HEADER) {
-      return res.status(404).send({ success: false, message: error });
+      return res.status(400).send({ success: false, message: error });
     }
     if (error === Errors.INVALID_TOKEN) {
       return res.status(401).send({ success: false, message: error });
@@ -67,7 +65,6 @@ router.get('/', async (req: Request, res: Response) => {
 });
 
 router.post('/:id/comment', async (req: Request, res: Response) => {
-  console.log('POST /api/post/comment');
   try {
     const requestHeader: string = req.headers['authorization'] || '';
     const isAuthorized = await AuthenticationService.isAuthorized(

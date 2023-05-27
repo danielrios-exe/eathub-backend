@@ -76,7 +76,7 @@ class MenuService {
     const defaultPost: Post = {
       text: '¡Echa un vistazo a nuestro nuevo menú!',
       userId: menu.restaurant_id,
-      image: [],
+      images: [],
     };
     const post = await postService.create(defaultPost);
 
@@ -89,8 +89,11 @@ class MenuService {
    * @returns
    */
   async get(restaurant_id: string) {
+    console.log('restaurant_id', restaurant_id);
     const menuRequest = await pool.query(
-      `select * from menu where restaurant_id = ${restaurant_id}`
+      `select m.*, u.username  from menu m ` +
+        `join "user" u on m.restaurant_id = u.id ` +
+        `where m.restaurant_id = ${restaurant_id}`
     );
     const rowCount = menuRequest.rowCount;
 
@@ -99,6 +102,7 @@ class MenuService {
     }
 
     const menu = { ...menuRequest.rows[0] };
+    console.log('menu', menu);
 
     // Get menu details
     const menuDetailsRequest = await pool.query(

@@ -3,6 +3,7 @@ import Errors from '../errors/errors';
 import AuthenticationService from './authentication-service';
 
 interface User {
+  id?: number;
   username: string;
   password: string;
   name: string;
@@ -10,6 +11,11 @@ interface User {
   email: string;
   isActive: boolean;
   roleId: number;
+}
+
+interface TokenResponse {
+  isUserValid: boolean;
+  user: User;
 }
 
 class UserService {
@@ -35,7 +41,10 @@ class UserService {
    * @param password
    * @returns boolean
    */
-  async isUserValid(username: string, password: string): Promise<boolean> {
+  async isUserValid(
+    username: string,
+    password: string
+  ): Promise<TokenResponse> {
     const authService = new AuthenticationService();
     const request = await pool.query(
       `select * from "user" u where u.username = '${username}'`
@@ -47,11 +56,13 @@ class UserService {
 
     const user = request.rows[0];
     const decryptedPassword = authService.decryptor(user.password);
+    const isUserValid = password === decryptedPassword;
 
-    return password === decryptedPassword;
+    return { isUserValid, user };
   }
 
   async createUser(userObj: User) {
+    console.log('userObj', userObj);
     const authService = new AuthenticationService();
     const request = await pool.query(
       `INSERT INTO "user" ` +
@@ -59,13 +70,24 @@ class UserService {
         `VALUES ('${userObj.username}', ` +
         `'${authService.encryptor(userObj.password)}', ` +
         `'${userObj.name}', '${userObj.lastName}', '${userObj.email}', ` +
-        `${userObj.isActive}, ${userObj.roleId})`
+        `true, ${userObj.roleId}) returning id`
     );
+    console.log('request', request);
     const rowCount = request.rowCount;
 
     if (rowCount === 0) {
       throw Errors.USER_NOT_CREATED;
     }
+
+    const userId = request.rows[0].id;
+    userObj.id = userId;
+
+    const token = authService.createToken({
+      username: userObj.username,
+      password: userObj.password,
+    });
+
+    return { token, user: userObj };
   }
 }
 

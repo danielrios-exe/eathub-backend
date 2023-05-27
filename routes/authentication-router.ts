@@ -12,11 +12,14 @@ router.post('/token', async (req, res) => {
     const authHeader: string = req.headers.authorization || '';
     const decodedString: string = authService.getDecodedString(authHeader);
     const { username, password } = authService.getCredentials(decodedString);
-    const isUserValid = await userService.isUserValid(username, password);
+    const { isUserValid, user } = await userService.isUserValid(
+      username,
+      password
+    );
 
     if (isUserValid) {
       const token = authService.createToken({ username, password });
-      return res.send(token);
+      return res.send({ success: true, token, user });
     } else {
       return res
         .status(401)
@@ -39,8 +42,8 @@ router.post('/register', async (req, res) => {
     if (isUserInDB) {
       res.status(409).send(Errors.USER_ALRADY_IN_DB);
     } else {
-      await userService.createUser(req.body);
-      return res.status(201).send({ success: true, message: 'User created.' });
+      const { token, user } = await userService.createUser(req.body);
+      return res.status(201).send({ success: true, token, user });
     }
   } catch (error) {
     if (error === Errors.NO_USER_FOUND) {

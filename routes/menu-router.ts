@@ -37,10 +37,13 @@ router.post('/', async (req: Request, res: Response) => {
 
 router.get('/', async (req: Request, res: Response) => {
   try {
+    console.log('get menu');
     const requestHeader: string = req.headers['authorization'] || '';
-    const isAuthorized = await AuthenticationService.isAuthorized(
+    const { isAuthorized } = await AuthenticationService.isAuthorized(
       requestHeader
     );
+
+    console.log(isAuthorized);
 
     if (!isAuthorized) {
       return res.status(401).send({ success: false, message: 'Unauthorized.' });
@@ -48,10 +51,10 @@ router.get('/', async (req: Request, res: Response) => {
 
     const restaurant_id = req.query.restaurant_id as string;
     const menu = await menuService.get(restaurant_id);
-    res.send({ success: true, data: menu });
+    res.send({ success: true, menu: menu });
   } catch (error) {
     if (error === Errors.INVALID_AUTH_HEADER) {
-      return res.status(404).send({ success: false, message: error });
+      return res.status(401).send({ success: false, message: error });
     }
     if (error === Errors.NO_MENU_DETAILS_FOUND) {
       return res.status(404).send({ success: false, message: error });
@@ -64,7 +67,7 @@ router.get('/', async (req: Request, res: Response) => {
 router.get('/mealTypes', async (req: Request, res: Response) => {
   try {
     const requestHeader: string = req.headers['authorization'] || '';
-    const isAuthorized = await AuthenticationService.isAuthorized(
+    const { isAuthorized } = await AuthenticationService.isAuthorized(
       requestHeader
     );
 
@@ -73,10 +76,10 @@ router.get('/mealTypes', async (req: Request, res: Response) => {
     }
 
     const mealTypes = await mealTypeService.get();
-    res.send({ success: true, data: mealTypes });
+    res.send({ success: true, mealTypes: mealTypes });
   } catch (error) {
     if (error === Errors.INVALID_AUTH_HEADER) {
-      return res.status(404).send({ success: false, message: error });
+      return res.status(400).send({ success: false, message: error });
     }
     if (error === Errors.NO_MEAL_TYPES_FOUND) {
       return res.status(404).send({ success: false, message: error });
